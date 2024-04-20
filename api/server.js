@@ -11,15 +11,15 @@ const multer = require('multer');
 const uploadMiddleware = multer({ dest: 'uploads/' });
 const fs = require('fs');
 
-const salt = bcrypt.genSaltSync(10);
-const secret = 'asdfe45we45w345wegw345werjktjwertkj';
+const salt = bcrypt.genSaltSync(process.env.SALT);
+const secret = process.env.SECRET;
 
 app.use(cors({credentials:true,origin:'http://localhost:3000'}));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 mongoose.set('strictQuery', true);
-mongoose.connect('mongodb+srv://newuser:newuser@cluster0.obwsfr1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
+mongoose.connect(process.env.MONGO_URL);
 
 app.post('/register', async (req,res) => {
   const {username,password} = req.body;
@@ -134,6 +134,5 @@ app.get('/post/:id', async (req, res) => {
   const postDoc = await Post.findById(id).populate('author', ['username']);
   res.json(postDoc);
 })
-const PORT=4000;
-app.listen(PORT);
+app.listen(process.env.PORT||4001);
 // //
