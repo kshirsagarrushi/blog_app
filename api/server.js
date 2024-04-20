@@ -14,7 +14,7 @@ const fs = require('fs');
 const salt = bcrypt.genSaltSync(process.env.SALT);
 const secret = process.env.SECRET;
 
-app.use(cors({credentials:true,origin:'http://localhost:3000'}));
+app.use(cors({credentials:true,origin:'https://blog-app-red-eight-35.vercel.app/'}));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
@@ -53,7 +53,7 @@ app.post('/login', async (req,res) => {
   }
 });
 
-app.get('/profile', (req,res) => {
+app.get('/profile', async(req,res) => {
   const {token} = req.cookies;
   jwt.verify(token, secret, {}, (err,info) => {
     if (err) throw err;
@@ -61,7 +61,7 @@ app.get('/profile', (req,res) => {
   });
 });
 
-app.post('/logout', (req,res) => {
+app.post('/logout', async(req,res) => {
   res.cookie('token', '').json('ok');
 });
 
